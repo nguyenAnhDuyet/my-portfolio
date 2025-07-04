@@ -15,7 +15,7 @@
     "axios": "^1.6.8",
     "framer-motion": "^12.23.0",
     "lottie-react": "^2.4.1",
-    "next": "15.1.1",
+    "next": "^15.4.0-canary.113",
     "nodemailer": "^6.9.15",
     "react": "19.0.0",
     "react-dom": "19.0.0",

@@ -1,35 +1,20 @@
-import axios from 'axios';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import axios from 'axios'; // Nếu cần dùng lại Telegram, bỏ comment dòng này
 
-// Create and configure Nodemailer transporter
+// Tạo transporter cho Gmail
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, 
+  secure: false,
   auth: {
     user: process.env.EMAIL_ADDRESS,
-    pass: process.env.GMAIL_PASSKEY, 
+    pass: process.env.GMAIL_PASSKEY,
   },
 });
 
-// Helper function to send a message via Telegram
-async function sendTelegramMessage(token, chat_id, message) {
-  const url = `https://api.telegram.org/bot${token}/sendMessage`;
-  try {
-    const res = await axios.post(url, {
-      text: message,
-      chat_id,
-    });
-    return res.data.ok;
-  } catch (error) {
-    console.error('Error sending Telegram message:', error.response?.data || error.message);
-    return false;
-  }
-};
-
-// HTML email template
+// Hàm tạo template email HTML
 const generateEmailTemplate = (name, email, userMessage) => `
   <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f4f4;">
     <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
@@ -45,19 +30,35 @@ const generateEmailTemplate = (name, email, userMessage) => `
   </div>
 `;
 
-// Helper function to send an email via Nodemailer
-async function sendEmail(payload, message) {
-  const { name, email, message: userMessage } = payload;
-  
+// ========================
+// PHẦN GỬI TELEGRAM (ĐÃ COMMENT LẠI)
+// ========================
+// Helper function to send a message via Telegram
+async function sendTelegramMessage(token, chat_id, message) {
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+  try {
+    const res = await axios.post(url, {
+      text: message,
+      chat_id,
+    });
+    return res.data.ok;
+  } catch (error) {
+    console.error('Error sending Telegram message:', error.response?.data || error.message);
+    return false;
+  }
+}
+// ========================
+
+// Hàm gửi email
+async function sendEmail({ name, email, message: userMessage }) {
   const mailOptions = {
-    from: "Portfolio", 
-    to: process.env.EMAIL_ADDRESS, 
-    subject: `New Message From ${name}`, 
-    text: message, 
-    html: generateEmailTemplate(name, email, userMessage), 
-    replyTo: email, 
+    from: 'Portfolio',
+    to: process.env.EMAIL_ADDRESS,
+    subject: `New Message From ${name}`,
+    text: `New message from ${name}\n\nEmail: ${email}\n\nMessage:\n\n${userMessage}\n\n`,
+    html: generateEmailTemplate(name, email, userMessage),
+    replyTo: email,
   };
-  
   try {
     await transporter.sendMail(mailOptions);
     return true;
@@ -65,41 +66,30 @@ async function sendEmail(payload, message) {
     console.error('Error while sending email:', error.message);
     return false;
   }
-};
+}
 
 export async function POST(request) {
   try {
     const payload = await request.json();
-    const { name, email, message: userMessage } = payload;
+    // ========================
+    // PHẦN GỬI TELEGRAM (ĐÃ COMMENT LẠI)
+    // ========================
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chat_id = process.env.TELEGRAM_CHAT_ID;
-
-    // Validate environment variables
-    if (!token || !chat_id) {
-      return NextResponse.json({
-        success: false,
-        message: 'Telegram token or chat ID is missing.',
-      }, { status: 400 });
-    }
-
-    const message = `New message from ${name}\n\nEmail: ${email}\n\nMessage:\n\n${userMessage}\n\n`;
-
-    // Send Telegram message
+    const message = `New message from ${payload.name}\n\nEmail: ${payload.email}\n\nMessage:\n\n${payload.message}\n\n`;
+    // Gửi Telegram
     const telegramSuccess = await sendTelegramMessage(token, chat_id, message);
-
-    // Send email
-    const emailSuccess = await sendEmail(payload, message);
-
-    if (telegramSuccess && emailSuccess) {
+    // ========================
+    const emailSuccess = await sendEmail(payload);
+    if (emailSuccess) {
       return NextResponse.json({
         success: true,
-        message: 'Message and email sent successfully!',
+        message: 'Message sent to your email successfully!' + (telegramSuccess ? ' (Telegram sent)' : ' (Telegram failed)'),
       }, { status: 200 });
     }
-
     return NextResponse.json({
       success: false,
-      message: 'Failed to send message or email.',
+      message: 'Failed to send email.',
     }, { status: 500 });
   } catch (error) {
     console.error('API Error:', error.message);
@@ -108,4 +98,4 @@ export async function POST(request) {
       message: 'Server error occurred.',
     }, { status: 500 });
   }
-};
+}

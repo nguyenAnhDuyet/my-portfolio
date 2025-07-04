@@ -10,6 +10,7 @@ import { MdDownload } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
 import { SiLeetcode } from "react-icons/si";
 import { useTypewriter } from "../../helper/useTypewriter";
+import { useState, useEffect } from "react";
 
 export default function HeroSection() {
   const lines = [
@@ -18,22 +19,44 @@ export default function HeroSection() {
     "Software Developer"
   ];
   const [line1, line2, line3] = useTypewriter(lines, 25, 200);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  const [isKong, setIsKong] = useState(false);
+  const [rotate, setRotate] = useState(false);
+
+  const handleAvatarClick = () => {
+    setRotate(false);
+    setTimeout(() => setRotate(true), 0);
+    setTimeout(() => setIsKong(prev => !prev), 350);
+  };
+
+  const handleAnimationEnd = () => {
+    setRotate(false);
+  };
   return (
     <section className="relative flex flex-col items-center justify-center min-h-[35vh] py-4 mt-8">
       <div className="w-full max-w-7xl px-8">
         <div className="bg-gradient-to-br from-[#232946] via-[#181c2b] to-[#25213b] rounded-xl p-6 md:p-12 shadow-2xl border border-[#232946] flex flex-col md:grid md:grid-cols-2 gap-8 items-center animate-fade-in">
           {/* Bên trái: Avatar + Info ngắn */}
           <div className="flex flex-col items-start gap-3">
-            <div className="relative mb-2">
+            <div className="relative mb-2 self-center -ml-10" style={{ perspective: '800px', width: 230, height: 230 }}>
+              <div className="absolute -inset-3 rounded-full pointer-events-none glow-purple avatar-glow-effect"></div>
               <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-[#16f2b3]/30 to-[#a78bfa]/20 animate-pulse-glow" />
-              <Image
-                src={personalData.profile || "/avatar.png"}
-                alt={personalData.name}
-                width={150}
-                height={150}
-                className="rounded-full border-2 border-[#232946] shadow-md object-cover z-10 relative bg-white"
-                priority
-              />
+              <div
+                className={`avatar-wrapper rounded-full border-2 border-[#232946] shadow-md z-10 relative bg-white avatar-glow${rotate ? ' rotate-once' : ''}`}
+                onClick={handleAvatarClick}
+                onAnimationEnd={handleAnimationEnd}
+                style={{ cursor: 'pointer', display: 'inline-block' }}
+              >
+                <Image
+                  src={isKong ? "/kong.gif" : (personalData.profile || "/avatar.png")}
+                  alt={personalData.name}
+                  width={230}
+                  height={2330}
+                  className="rounded-full object-cover"
+                  priority
+                />
+              </div>
             </div>
             <span className="mb-0 text-lg md:text-xl font-bold text-[#16f2b3] tracking-wide">{line1}</span>
             <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight">{line2}</span>
@@ -102,6 +125,33 @@ export default function HeroSection() {
         @keyframes pulseGlow {
           0%, 100% { opacity: 0.7; filter: blur(16px); }
           50% { opacity: 1; filter: blur(24px); }
+        }
+        .glow-purple {
+          background: radial-gradient(circle, #a259ec 60%, transparent 80%);
+          filter: blur(18px);
+          opacity: 1;
+          z-index: 1;
+          animation: pulseGlowPurple 2.5s ease-in-out infinite;
+        }
+        @keyframes pulseGlowPurple {
+          0%, 100% { opacity: 0.85; }
+          50% { opacity: 1; }
+        }
+        /* .relative.mb-2:hover .avatar-glow {
+          transform: scale(1.08) rotate(-3deg);
+          filter: brightness(1.1) drop-shadow(0 0 36px #a259ec);
+        }
+        .relative.mb-2:hover .avatar-glow-effect {
+          filter: blur(24px);
+          opacity: 1;
+        } */
+        .rotate-once {
+          animation: avatar-flip 0.7s cubic-bezier(.4,0,.2,1);
+          backface-visibility: hidden;
+        }
+        @keyframes avatar-flip {
+          0% { transform: rotateY(0deg); }
+          100% { transform: rotateY(360deg); }
         }
       `}</style>
     </section>
