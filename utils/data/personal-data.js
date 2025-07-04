@@ -2,7 +2,7 @@ export const personalData = {
   name: "Nguyen Anh Duyet",
   profile: '/profile.png',
   designation: "Software Developer",
-  description: "My name is Nguyen Anh Duyet. I am a professional and enthusiastic programmer in my daily life. I am a quick learner with a self-learning attitude. I love to learn and explore new technologies and am passionate about problem-solving. I love almost all the stacks of web application development and love to make the web more open to the world. My core skill is based on JavaScript and I love to do most of the things using JavaScript. I am available for any kind of job opportunity that suits my skills and interests.",
+  description: "My name is Nguyen Anh Duyet, a passionate and dedicated programmer with a strong self-learning mindset. I’m always eager to explore new technologies and enjoy solving complex problems. I’m open to job opportunities that align with my skills, interests, and growth potential.",
   email: 'duyetck6@gmail.com',
   phone: '0865462400',
   address: '3/2 Hung Loi, Ninh Kieu, Can Tho',
