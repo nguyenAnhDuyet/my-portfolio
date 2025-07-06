@@ -33,8 +33,9 @@ export default function HeroSection() {
   const handleAnimationEnd = () => {
     setRotate(false);
   };
+
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-[35vh] py-4 mt-8">
+    <section className="relative z-20 flex flex-col items-center justify-center min-h-[35vh] py-4 mt-8">
       <div className="w-full max-w-7xl px-8">
         <div className="bg-gradient-to-br from-[#232946] via-[#181c2b] to-[#25213b] rounded-xl p-6 md:p-12 shadow-2xl border border-[#232946] flex flex-col md:grid md:grid-cols-2 gap-8 items-center animate-fade-in">
           {/* Bên trái: Avatar + Info ngắn */}
@@ -52,7 +53,7 @@ export default function HeroSection() {
                   src={isKong ? "/kong.gif" : (personalData.profile || "/avatar.png")}
                   alt={personalData.name}
                   width={230}
-                  height={2330}
+                  height={230}
                   className="rounded-full object-cover"
                   priority
                 />
@@ -137,14 +138,14 @@ export default function HeroSection() {
           0%, 100% { opacity: 0.85; }
           50% { opacity: 1; }
         }
-        /* .relative.mb-2:hover .avatar-glow {
+        .relative.mb-2:hover .avatar-glow {
           transform: scale(1.08) rotate(-3deg);
           filter: brightness(1.1) drop-shadow(0 0 36px #a259ec);
         }
         .relative.mb-2:hover .avatar-glow-effect {
           filter: blur(24px);
           opacity: 1;
-        } */
+        }
         .rotate-once {
           animation: avatar-flip 0.7s cubic-bezier(.4,0,.2,1);
           backface-visibility: hidden;

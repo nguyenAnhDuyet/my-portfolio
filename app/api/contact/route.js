@@ -75,7 +75,7 @@ export async function POST(request) {
     // PHẦN GỬI TELEGRAM (ĐÃ COMMENT LẠI)
     // ========================
     const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chat_id = process.env.TELEGRAM_CHAT_ID;
+    const chat_id = parseInt(process.env.TELEGRAM_CHAT_ID);
     const message = `New message from ${payload.name}\n\nEmail: ${payload.email}\n\nMessage:\n\n${payload.message}\n\n`;
     // Gửi Telegram
     const telegramSuccess = await sendTelegramMessage(token, chat_id, message);
