@@ -15,7 +15,7 @@ export const projectsData = [
         tools: ['React Native', 'Expo go', 'HTML', 'CSS', 'SQL Server', 'google map', 'socket.io', 'OCR', 'JWT', 'Postman'],
         role: 'Mobile Developer',
         code: 'https://github.com/nguyenAnhDuyet/Delivery-truck-connection-system.git',
-        demo: 'https://drive.google.com/file/d/1yGDAenELFqa3fmIUP_XNbqKpsVlaaj0e/view?usp=sharing',
+        demo: 'https://drive.google.com/file/d/1yGDAeneLFqa3fmUlP_XNBqKpsVlaaj0e/view?usp=sharing',
     },
 ];
 
