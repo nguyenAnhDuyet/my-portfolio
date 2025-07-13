@@ -30,12 +30,12 @@ export default function RootLayout({ children }) {
           <ScrollToTop />
           
           {/* Mô hình 3D hiển thị ở góc phải phía dưới */}
-          <div className="fixed bottom-8 right-8 w-64 h-64 md:w-80 md:h-80 z-50">
+          {/* <div className="fixed bottom-8 right-8 w-64 h-64 md:w-80 md:h-80 z-50">
             <Model3D 
               className="w-full h-full"
             />
           </div>
-          
+           */}
         
           <div className="fixed inset-0 w-full h-full z-10 pointer-events-none">
             <GlobalParticleCanvas count={300} />
